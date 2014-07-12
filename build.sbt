@@ -1,2 +1,2 @@
-name := "ms-template"
+name := "ms-template-juan"
 
