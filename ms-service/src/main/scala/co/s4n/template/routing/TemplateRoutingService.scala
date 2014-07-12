@@ -4,10 +4,10 @@ import spray.json.DefaultJsonProtocol
 import spray.routing.Directives
 
 /**
- * TemplateExampleService
+ * TemplateRoutingService
  * @author S4N
  */
-class TemplateExampleService extends Directives with DefaultJsonProtocol {
+class TemplateRoutingService extends Directives with DefaultJsonProtocol {
   import akka.util.Timeout
   import spray.http._
 
