@@ -19,7 +19,6 @@ class TemplateRoutingService extends Directives with HttpService with Actor with
   val actorClient = context.actorOf(Props[TemplateActorClient], "TemplateActorClient")
 
   def receive = LoggingReceive {
-    log.info("JUST DO IT -> :D")
     runRoute(route)
   }
 
