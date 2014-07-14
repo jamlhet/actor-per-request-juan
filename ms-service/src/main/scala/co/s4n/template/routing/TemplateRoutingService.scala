@@ -1,10 +1,10 @@
 package c.s4n.template.web
 
 import akka.actor.{Actor, ActorLogging, Props}
-import akka.event.{LoggingReceive, Logging}
+import akka.event.LoggingReceive
 import co.s4n.template.RestMessage
-import co.s4n.template.client.TemplateClient
-import co.s4n.template.core.ResolvePostCore
+import co.s4n.template.client.TemplateActorClient
+import co.s4n.template.core.TemplateActorCore
 import co.s4n.template.routing.TemplatePerRequest
 import spray.routing.{Directives, HttpService, Route}
 
@@ -14,18 +14,9 @@ import spray.routing.{Directives, HttpService, Route}
  */
 class TemplateRoutingService extends Directives with HttpService with Actor with TemplatePerRequest with ActorLogging {
 
-  import akka.util.Timeout
-
-import scala.concurrent.duration._
-
   implicit def actorRefFactory = context
 
-  val logAkka = Logging(context.system, this)
-
-  val actorClient = context.actorOf(Props[TemplateClient],"TemplateClient")
-  log.info("actorClient path :D :" + actorClient.path)
-
-  implicit val timeout = Timeout(120.seconds)
+  val actorClient = context.actorOf(Props[TemplateActorClient], "TemplateActorClient")
 
   def receive = LoggingReceive {
     log.info("JUST DO IT -> :D")
@@ -52,11 +43,13 @@ import scala.concurrent.duration._
     }
     post {
       log.info("Hello per request :D")
-      resolvePost{new RestMessage("Hello per request")}
+      resolvePost {
+        new RestMessage("Hello per request")
+      }
     }
   }
 
   def resolvePost(message: RestMessage): Route =
-    ctx => perRequest(ctx, Props(new ResolvePostCore(actorClient)), message)
+    ctx => perRequest(ctx, Props(new TemplateActorCore(actorClient)), message)
 
 }
