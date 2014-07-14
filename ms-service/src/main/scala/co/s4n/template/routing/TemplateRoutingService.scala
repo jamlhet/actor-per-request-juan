@@ -1,45 +1,62 @@
 package c.s4n.template.web
 
-import spray.json.DefaultJsonProtocol
-import spray.routing.Directives
+import akka.actor.{Actor, ActorLogging, Props}
+import akka.event.{LoggingReceive, Logging}
+import co.s4n.template.RestMessage
+import co.s4n.template.client.TemplateClient
+import co.s4n.template.core.ResolvePostCore
+import co.s4n.template.routing.TemplatePerRequest
+import spray.routing.{Directives, HttpService, Route}
 
 /**
  * TemplateRoutingService
  * @author S4N
  */
-class TemplateRoutingService extends Directives with DefaultJsonProtocol {
+class TemplateRoutingService extends Directives with HttpService with Actor with TemplatePerRequest with ActorLogging {
+
   import akka.util.Timeout
-  import spray.http._
 
 import scala.concurrent.duration._
 
-  implicit val timeout = Timeout( 120.seconds )
+  implicit def actorRefFactory = context
 
-  val route = path( "templates" ) {
+  val logAkka = Logging(context.system, this)
+
+  val actorClient = context.actorOf(Props[TemplateClient],"TemplateClient")
+  log.info("actorClient path :D :" + actorClient.path)
+
+  implicit val timeout = Timeout(120.seconds)
+
+  def receive = LoggingReceive {
+    log.info("JUST DO IT -> :D")
+    runRoute(route)
+  }
+
+  val stringMessage = "Hello request"
+
+  val route = path("templates") {
     delete {
-      complete( "Resource deleted" )
+      complete("Resource deleted")
     }
     put {
-      complete( "PUT executed" )
+      complete("PUT executed")
     }
     options {
-      complete( "OPTIONS executed" )
+      complete("OPTIONS executed")
     }
     head {
-      complete( "HEAD executed" )
+      complete("HEAD executed")
     }
     get {
-      complete( "" )
+      complete("")
     }
     post {
-      complete(StatusCodes.Created -> "POST OK")
-//      detach( ) {
-//        val response = ( TemplateActors.templateSupervisor ? new TemplateMessage( "hello, akka world", 1 ) )
-//        onSuccess( response ) {
-//          case str: String => complete( StatusCodes.Created -> "POST executed " )
-//        }
-//      }
+      log.info("Hello per request :D")
+      resolvePost{new RestMessage("Hello per request")}
     }
   }
+
+  def resolvePost(message: RestMessage): Route =
+    ctx => perRequest(ctx, Props(new ResolvePostCore(actorClient)), message)
 
 }

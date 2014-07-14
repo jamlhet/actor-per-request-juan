@@ -11,14 +11,14 @@ import org.scalatest.junit.JUnitRunner
 class TemplatePostTest extends FunSuite {
 
   RestAssured.baseURI = "http://192.168.0.200"
-  RestAssured.port = 9400
+  RestAssured.port = 38080
   
-  test( "POST" ) {
+  "Test POST method" in = {
     val response =
       given( )
         .contentType( ContentType.JSON )
       .expect( )
-        .statusCode( 201 )
+        .statusCode( 200 )
       .when( ) 
         .post( "/templates" )
         

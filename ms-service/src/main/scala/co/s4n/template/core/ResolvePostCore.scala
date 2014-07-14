@@ -1,14 +1,35 @@
 package co.s4n.template.core
 
-import akka.actor.Actor.Receive
-import akka.actor.{ActorLogging, Actor, ActorRef}
-import co.s4n.template.{ActorClientMessage, RestMessage}
+import akka.actor.{Actor, ActorLogging, ActorRef, OneForOneStrategy}
+import akka.actor.SupervisorStrategy.Restart
+import akka.event.LoggingReceive
+import co.s4n.template.{ResponseMessage, RestMessage}
 
 /**
- * Created by juan on 12/07/14.
+ *
+ * @param actorClient
  */
-class ResolvePostCore( actorClient: ActorRef ) extends Actor with ActorLogging{
-  def receive = {
-    case RestMessage => actorClient !  new RestMessage("Hello client")
+class ResolvePostCore(actorClient: ActorRef) extends Actor with ActorLogging {
+  println("In class ResolvePostCore")
+
+  def receive = LoggingReceive {
+    case message: RestMessage =>
+      log.info("RestMessage :D -> " + message.toString)
+      actorClient ! message
+      context.become(waitResponse)
   }
+
+  def waitResponse: Receive = {
+    case message: ResponseMessage =>
+      log.info("ResponseMessage :D -> " + message)
+      context.parent ! message
+  }
+
+  override val supervisorStrategy = OneForOneStrategy() {
+    case exception: Exception =>
+      exception.printStackTrace()
+      log.error(exception, exception.getMessage())
+      Restart
+  }
+
 }

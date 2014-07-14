@@ -1,22 +1,32 @@
 package co.s4n.template
 
-object Boot extends App with Api with BootedCore with HostBinding  {
+import akka.actor.{ActorSystem, Props}
+import c.s4n.template.web.TemplateRoutingService
+
+object Boot extends App with HostBinding {
+
   import akka.io.IO
   import spray.can.Http
 
-  IO( Http )( system ) ! Http.Bind( rootService, interface = machineIp( ), port = portNumber( args ) )
+  IO(Http)(system) ! Http.Bind(rootService, interface, port = portNumber(args))
 }
 
 trait HostBinding {
-	import collection.JavaConversions.enumerationAsScalaIterator
-	import java.net.{ InetAddress, NetworkInterface }
-	
-  def portNumber( args: Array[ String ] ): Int =
-    if ( args.length != 0 ) args( 0 ).toInt else 9400
 
-  def machineIp(): String =
-    NetworkInterface.getByName( s"eth0" ).getInetAddresses.map( matchIp ).flatten.mkString
+  import java.net.{InetAddress, NetworkInterface}
 
-  private def matchIp( address: InetAddress ): Option[ String ] =
-    """\b(?:\d{1,3}\.){3}\d{1,3}\b""".r.findFirstIn( address.getHostAddress( ) )
+import scala.collection.JavaConversions.enumerationAsScalaIterator
+
+  val system = ActorSystem("ms-service-juan-executor")
+  val rootService = ActorSystem("ms-service-juan-executor").actorOf(Props(new TemplateRoutingService()))
+  val interface = machineIp()
+
+  def portNumber(args: Array[String]): Int =
+    if (args.length != 0) args(0).toInt else 38080
+
+  private def machineIp(): String =
+    NetworkInterface.getByName(s"eth0").getInetAddresses.map(matchIp).flatten.mkString
+
+  private def matchIp(address: InetAddress): Option[String] =
+    """\b(?:\d{1,3}\.){3}\d{1,3}\b""".r.findFirstIn(address.getHostAddress())
 }

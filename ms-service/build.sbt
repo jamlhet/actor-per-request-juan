@@ -13,7 +13,7 @@ test in assembly := {}
 
 outputPath in assembly := file( "../ms-service.jar" )
 
-name := "ms-service"
+name := "ms-service-juan"
 
 version := "0.1"
 
