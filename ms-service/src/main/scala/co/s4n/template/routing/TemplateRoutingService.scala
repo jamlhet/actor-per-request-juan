@@ -42,7 +42,6 @@ class TemplateRoutingService extends Directives with HttpService with Actor with
       complete("")
     }
     post {
-      log.info("Hello per request :D")
       resolvePost {
         new RestMessage("Hello per request")
       }

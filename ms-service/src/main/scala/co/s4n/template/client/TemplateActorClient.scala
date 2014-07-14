@@ -11,10 +11,8 @@ import co.s4n.template.{ResponseMessage, RestMessage}
 class TemplateActorClient extends Actor with ActorLogging {
   def receive = LoggingReceive {
     case message: RestMessage =>
-      log.info("RestMessage :D -> " + message)
       sender ! new ResponseMessage("Client OK")
     case _ =>
-      log.info("default")
       sender ! "X"
   }
 
