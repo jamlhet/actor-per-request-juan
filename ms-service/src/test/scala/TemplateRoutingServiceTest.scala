@@ -8,7 +8,7 @@ import org.scalatest.junit.JUnitRunner
 @RunWith(classOf[JUnitRunner])
 class TemplateRoutingServiceTest extends FlatSpec {
 
-  RestAssured.baseURI = "http://192.168.0.200"
+  RestAssured.baseURI = "http://192.168.170.192"
   RestAssured.port = 38080
 
   "POST method " should " retrieve StatusCode 200 -> OK" in {
