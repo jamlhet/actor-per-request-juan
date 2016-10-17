@@ -62,23 +62,24 @@ object Common {
 
 	def akkaLibraries = Seq(
 		"com.typesafe.akka" 		%% "akka-actor" 			% akkaVersion withSources(),
-	  	"com.typesafe.akka" 		%% "akka-slf4j"       		% akkaVersion withSources(),
-	  	"com.typesafe.akka" 		%% "akka-testkit"       	% akkaVersion withSources(),
-	  	"com.typesafe.akka" 		%% "akka-remote" 			% akkaVersion withSources(),
-	  	"ch.qos.logback"     		%  "logback-classic"  		% "1.0.13" withSources()
+		"com.typesafe.akka" 		%% "akka-slf4j"       		% akkaVersion withSources(),
+		"com.typesafe.akka" 		%% "akka-testkit"       	% akkaVersion withSources(),
+		"com.typesafe.akka" 		%% "akka-remote" 			% akkaVersion withSources(),
+		"com.typesafe.slick" %% "slick-extensions" % "3.0.0-RC1",
+		"ch.qos.logback"     		%  "logback-classic"  		% "1.0.13" withSources()
   	)
 
-  	def sprayLibraries = Seq(
-	    "io.spray"           		% 	"spray-can"    			% sprayVersion withSources(),
-	    "io.spray"           		% 	"spray-routing"    		% sprayVersion withSources(),
-	    "io.spray"           		% 	"spray-client"    		% sprayVersion withSources(),
-	    "io.spray"           		% 	"spray-http"    		% sprayVersion withSources(),
-	    "io.spray"           		% 	"spray-httpx"    		% sprayVersion withSources(),
+	def sprayLibraries = Seq(
+		"io.spray"           		% 	"spray-can"    			% sprayVersion withSources(),
+		"io.spray"           		% 	"spray-routing"    		% sprayVersion withSources(),
+		"io.spray"           		% 	"spray-client"    		% sprayVersion withSources(),
+		"io.spray"           		% 	"spray-http"    		% sprayVersion withSources(),
+		"io.spray"           		% 	"spray-httpx"    		% sprayVersion withSources(),
 		"io.spray" 					%% 	"spray-json" 			% "1.2.5" withSources(),
 		"com.chuusai"				%% 	"shapeless" 			% "1.2.4" withSources()
   	)
 
-  	def testingLibraries = Seq(
+	def testingLibraries = Seq(
 		"junit" 			 		%	"junit"				%	"4.10"		% "test",
 		"com.jayway.restassured"	%	"rest-assured" 		%	"1.8.1"		% "test",
 		"org.scalatest" 	 		% 	"scalatest_2.10" 	%	"1.9.1" 	% "test",
